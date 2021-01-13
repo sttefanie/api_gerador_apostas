@@ -2,11 +2,8 @@ package br.com.orange.apostador.controller;
 
 import br.com.orange.apostador.entity.Aposta;
 import br.com.orange.apostador.service.ApostaService;
-import br.com.orange.apostador.util.GeradorAposta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,30 +13,19 @@ public class ApostaController {
     @Autowired
     private ApostaService service;
 
-    @PostMapping("/apostar")
+    @PostMapping("/apostas")
     public Aposta createAposta(@RequestParam Map<String, String> requestParams)
     {
-        GeradorAposta geradorNumeros = new GeradorAposta();
         String email = requestParams.get("email");
-        String dezenasApostadas = geradorNumeros.obterNumerosString();
-        Aposta aposta = new Aposta();
-        aposta.setEmail(email);
-        aposta.setDataAposta(new Date());
-        aposta.setNumerosApostados(dezenasApostadas);
-        return service.saveAposta(aposta);
+        return service.saveEmailAposta(email);
     }
 
-    @GetMapping("/obterApostas")
-    public List<Aposta> getApostasByEmail(@RequestParam("email") String email){
+    @GetMapping("/apostas/{email}")
+    public List<Aposta> getApostasByEmail(@PathVariable String email){
         return service.getApostasByEmail(email);
     }
 
-    @PostMapping("/inserir")
-    public Aposta addAposta(@RequestBody Aposta aposta){
-        return service.saveAposta(aposta);
-    }
-
-    @GetMapping("/all")
+    @GetMapping("/apostas")
     public List<Aposta> findAllApostas(){
         return service.getApostas();
     }
